@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class ConexionDB {
     Connection conn;
   
-    
+    //documentacion
     public ConexionDB(){
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
