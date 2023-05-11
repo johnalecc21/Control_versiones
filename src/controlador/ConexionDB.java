@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.*;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 
 
@@ -125,10 +126,42 @@ public class ConexionDB {
         return res;
     }
     
-    
-    public int Reproducto(String nombreproducto, String descripcion, String precio, String cantidad){
+    public int Reproducto(String nombreproducto, String descripcion, String precio, String cantidad) {
+    try {
+        // Realizar una consulta a la base de datos para verificar si ya existe un registro con los mismos valores
+        String query = "SELECT * FROM productos WHERE nombreproducto=? AND descripcion = ?";
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setString(1, nombreproducto);
+        ps.setString(2, descripcion);
+        ResultSet rs = ps.executeQuery();
+
+        // Si se encuentra un registro que coincide con los valores, retornar un valor específico para indicar que no se pudo agregar el producto
+        if (rs.next()) {
+            System.out.println("Producto ya existe");
+            return -1;
+            
+        }
+
+        // Si no se encuentra ningún registro que coincida con los valores, insertar los datos en la base de datos y retornar un valor específico para indicar que se agregó correctamente
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO productos(nombreproducto, descripcion, precio, cantidad) VALUES (?, ?, ?, ?)");
+        stmt.setString(1, nombreproducto);
+        stmt.setString(2, descripcion);
+        stmt.setString(3, precio);
+        stmt.setString(4, cantidad);
+        int res = stmt.executeUpdate();
+        System.out.println("Producto registrado correctamente");
+        return res;
+    } catch (Exception e) {
+        System.out.println("Error al registrar");
+        System.out.println(e);
+        return 0;
+    }
+}
+
+    /*public int Reproducto(String nombreproducto, String descripcion, String precio, String cantidad){
         int res=0;
         try {
+  
             PreparedStatement stmt;
             stmt=conn.prepareStatement("insert into productos(nombreproducto,descripcion,precio,cantidad)values(?,?,?,?)");
            
@@ -144,7 +177,7 @@ public class ConexionDB {
         }
         
         return res;
-    }
+    }*/
     
     public ArrayList<Producto> ListarProducto(){
         PreparedStatement ps;
