@@ -43,26 +43,68 @@ public class ConexionDB {
         return result;
     }
     
-    public int Reusuario(String documento, String nombre, String contrasena, String rol, String estado){
-        int res=0;
+      public boolean existeUsuario(String documento) {
+    boolean existe = false;
+    try {
+        PreparedStatement stmt;
+        stmt = conn.prepareStatement("SELECT * FROM Usuarios WHERE documento=?");
+        stmt.setString(1, documento);
+        ResultSet rs = stmt.executeQuery();
+        existe = rs.next();
+    } catch (Exception e) {
+        System.out.println("Error al consultar");
+        System.out.println(e);
+    }
+    return existe;
+}
+
+public int Reusuario(String documento, String nombre, String contrasena, String rol, String estado){
+    int res = 0;
+    if (existeUsuario(documento)) {
+        JOptionPane.showMessageDialog(null, "El usuario con documento " + documento + " ya existe");
+    } else {
         try {
             PreparedStatement stmt;
-            stmt=conn.prepareStatement("insert into Usuarios(documento,nombre,contrasena,rol,estado)values(?,?,?,?,?)");
-           
+            stmt=conn.prepareStatement("INSERT INTO Usuarios(documento, nombre, contrasena, rol, estado) VALUES (?, ?, ?, ?, ?)");
+
             stmt.setString(1, documento);
             stmt.setString(2, nombre);
             stmt.setString(3, contrasena);
-            stmt.setString(4, rol); 
-            stmt.setString(5, estado); 
+            stmt.setString(4, rol);
+            stmt.setString(5, estado);
             res=stmt.executeUpdate();
             System.out.println("Usuario registrado correctamente");
         } catch (Exception e) {
             System.out.println("Error al registrar");
             System.out.println(e);
         }
-        
-        return res;
+
+
     }
+    return res;
+}
+
+      
+      
+//    public int Reusuario(String documento, String nombre, String contrasena, String rol, String estado){
+//        int res=0;
+//        try {
+//            PreparedStatement stmt;
+//            stmt=conn.prepareStatement("insert into Usuarios(documento,nombre,contrasena,rol,estado)values(?,?,?,?,?)");
+//           
+//            stmt.setString(1, documento);
+//            stmt.setString(2, nombre);
+//            stmt.setString(3, contrasena);
+//            stmt.setString(4, rol); 
+//            stmt.setString(5, estado); 
+//            res=stmt.executeUpdate();
+//            System.out.println("Usuario registrado correctamente");
+//        } catch (Exception e) {
+//            System.out.println("Error al registrar");
+//            System.out.println(e);
+//        }      
+//        return res;
+//    }
     
         public ArrayList<Usuario> ListarUsuario(){
         PreparedStatement ps;
@@ -139,7 +181,6 @@ public class ConexionDB {
         if (rs.next()) {
             System.out.println("Producto ya existe");
             return -1;
-            
         }
 
         // Si no se encuentra ningún registro que coincida con los valores, insertar los datos en la base de datos y retornar un valor específico para indicar que se agregó correctamente
@@ -208,6 +249,7 @@ public class ConexionDB {
         ResultSet rs;
         
         try {
+
             ps=conn.prepareStatement(" update productos set nombreproducto=?, descripcion=?, precio=?, cantidad=? where idproductos=?");
             ps.setString(1, nombreproducto);
             ps.setString(2, descripcion);
