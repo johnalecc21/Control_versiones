@@ -10,13 +10,29 @@ import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import modelo.Producto;
 import controlador.ConexionDB;
+import controlador.CustomRowRenderer;
 import controlador.EstadoCellRenderer;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.event.KeyListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 /**
  *
  * @author johna
@@ -30,6 +46,12 @@ public class page4 extends javax.swing.JPanel {
         initComponents();
         actualizarTabla();
     }
+    
+    
+    
+    
+    
+    
 private void actualizarTabla() {
     ConexionDB conexion = new ConexionDB();
     List<Producto> productos = conexion.obtenerProductos();
@@ -40,13 +62,40 @@ private void actualizarTabla() {
     modelo.addColumn("precio");
     modelo.addColumn("cantidad");
     modelo.addColumn("estado");
+    
+
     for (Producto producto : productos) {
         modelo.addRow(new Object[]{producto.getIdproducto(), producto.getNombreProducto(), producto.getDescripcion(), producto.getPrecio(), producto.getCantidad(), producto.getEstado()});
     }
+
     listaKardex.setModel(modelo);
+    
+    
+        // Obtener la columna "id" de la tabla
+    TableColumn columnaId = listaKardex.getColumnModel().getColumn(0);
+
+    // Crear una fuente en negrilla
+    Font font = new Font(columnaId.getHeaderValue().toString(), Font.BOLD, 12);
+
+    // Establecer la fuente en negrilla para la columna "id"
+    columnaId.setCellRenderer(new DefaultTableCellRenderer() {
+    @Override
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        JLabel label = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        setHorizontalAlignment(SwingConstants.CENTER);
+        
+        label.setFont(font);
+        return label;
+    }
+});
+  
     listaKardex.getColumnModel().getColumn(5).setCellRenderer(new EstadoCellRenderer());
+    listaKardex.setDefaultRenderer(Object.class, new CustomRowRenderer()); // establecer renderer para todas las celdas
 
 }
+
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -58,8 +107,7 @@ private void actualizarTabla() {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        textfielBuscar = new javax.swing.JTextField();
-        btnBuscar = new javax.swing.JButton();
+        txtbuscar = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -72,10 +120,19 @@ private void actualizarTabla() {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        btnBuscar.setBackground(new java.awt.Color(51, 155, 255));
-        btnBuscar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnBuscar.setForeground(new java.awt.Color(255, 255, 255));
-        btnBuscar.setText("Buscar");
+        txtbuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtbuscarActionPerformed(evt);
+            }
+        });
+        txtbuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtbuscarKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtbuscarKeyTyped(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Ingrese id, nombre o estado a buscar");
@@ -85,13 +142,11 @@ private void actualizarTabla() {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addContainerGap(170, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addGap(34, 34, 34)
-                .addComponent(textfielBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(65, 65, 65)
-                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(240, Short.MAX_VALUE))
+                .addGap(44, 44, 44)
+                .addComponent(txtbuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(160, 160, 160))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -99,8 +154,7 @@ private void actualizarTabla() {
                 .addGap(11, 11, 11)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(textfielBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtbuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(11, Short.MAX_VALUE))
         );
 
@@ -139,20 +193,74 @@ private void actualizarTabla() {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        listaKardex.setEnabled(false);
         jScrollPane1.setViewportView(listaKardex);
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, 1030, 370));
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtbuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtbuscarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtbuscarActionPerformed
+
+    private void txtbuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscarKeyTyped
+   // TODO add your handling code here:
+   TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>((DefaultTableModel) listaKardex.getModel());
+    listaKardex.setRowSorter(sorter);
+
+   txtbuscar.getDocument().addDocumentListener(new DocumentListener() {
+    @Override
+    public void insertUpdate(DocumentEvent e) {
+        SwingUtilities.invokeLater(() -> buscar());
+    }
+
+    @Override
+    public void removeUpdate(DocumentEvent e) {
+        SwingUtilities.invokeLater(() -> buscar());
+    }
+
+    @Override
+    public void changedUpdate(DocumentEvent e) {
+        SwingUtilities.invokeLater(() -> buscar());
+    }
+
+
+        public void buscar() {
+            String text = txtbuscar.getText();
+            boolean encontrado = false;
+            if (text.trim().length() == 0) {
+                sorter.setRowFilter(null);
+            } else {
+                try {
+                    int id = Integer.parseInt(text);
+                    // buscar por id
+                    sorter.setRowFilter(RowFilter.regexFilter("^" + id + "$", 0));
+                    encontrado = true;
+                } catch (NumberFormatException e) {
+                    // buscar por nombre o estado
+                    sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text, 1, 5));
+                    encontrado = listaKardex.getRowCount() > 0;
+                }
+            }
+
+        }
+
+    }); 
+   
+    }//GEN-LAST:event_txtbuscarKeyTyped
+
+    private void txtbuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtbuscarKeyReleased
+        // TODO add your handling code here
+    }//GEN-LAST:event_txtbuscarKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBuscar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable listaKardex;
-    private javax.swing.JTextField textfielBuscar;
+    private javax.swing.JTextField txtbuscar;
     // End of variables declaration//GEN-END:variables
 }

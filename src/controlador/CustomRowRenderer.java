@@ -4,9 +4,7 @@
  */
 package controlador;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -14,23 +12,14 @@ import javax.swing.table.DefaultTableCellRenderer;
  *
  * @author johna
  */
-public class EstadoCellRenderer extends DefaultTableCellRenderer {
-    
-        @Override
+public class CustomRowRenderer extends DefaultTableCellRenderer {
+
+    private static final int ROW_HEIGHT = 30; // altura deseada para las filas
+
+    @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        String estado = (String) value;
-        if (estado.equals("En stock")) {
-            cell.setBackground(new java.awt.Color(112, 235, 22));
-        } else if (estado.equals("Pocas existencias")) {
-            cell.setBackground(new java.awt.Color(235, 216, 22));
-        } else {
-            cell.setBackground(new java.awt.Color(235, 96, 22));
-        }
-        
-        Font font = cell.getFont().deriveFont(Font.BOLD, 13f);
-         cell.setFont(font);
+        table.setRowHeight(row, ROW_HEIGHT); // establecer altura de fila personalizada
         return cell;
     }
-    
 }

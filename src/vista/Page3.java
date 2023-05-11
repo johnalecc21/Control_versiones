@@ -467,15 +467,10 @@ public final class Page3 extends javax.swing.JPanel {
     }//GEN-LAST:event_txtcantidadActionPerformed
 
     private void txtprecioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtprecioKeyTyped
- /**
-  * if (evt.getKeyChar()>=32 && evt.getKeyChar()<=47 || evt.getKeyChar()>=58 ) {
+    // TODO add your handling code here:*/
+    if (evt.getKeyChar()>=32 && evt.getKeyChar()<=47 || evt.getKeyChar()>=58 ) {
             evt.consume();
             JOptionPane.showMessageDialog(this, "Solo se permite el ingreso de numeros");
-        }        // TODO add your handling code here:*/
- char c = evt.getKeyChar();
-        if (!(Character.isDigit(c) )) {
-            JOptionPane.showMessageDialog(this, "Solo se permite el ingreso de numeros");
-            evt.consume();
         }
     }//GEN-LAST:event_txtprecioKeyTyped
 
