@@ -4,6 +4,19 @@
  */
 package vista;
 
+
+import javax.swing.JList;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+import modelo.Producto;
+import controlador.ConexionDB;
+import controlador.EstadoCellRenderer;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 /**
  *
  * @author johna
@@ -15,7 +28,25 @@ public class page4 extends javax.swing.JPanel {
      */
     public page4() {
         initComponents();
+        actualizarTabla();
     }
+private void actualizarTabla() {
+    ConexionDB conexion = new ConexionDB();
+    List<Producto> productos = conexion.obtenerProductos();
+    DefaultTableModel modelo = new DefaultTableModel();
+    modelo.addColumn("id");
+    modelo.addColumn("Nombre producto");
+    modelo.addColumn("descripcion");
+    modelo.addColumn("precio");
+    modelo.addColumn("cantidad");
+    modelo.addColumn("estado");
+    for (Producto producto : productos) {
+        modelo.addRow(new Object[]{producto.getIdproducto(), producto.getNombreProducto(), producto.getDescripcion(), producto.getPrecio(), producto.getCantidad(), producto.getEstado()});
+    }
+    listaKardex.setModel(modelo);
+    listaKardex.getColumnModel().getColumn(5).setCellRenderer(new EstadoCellRenderer());
+
+}
 
     /**
      * This method is called from within the constructor to initialize the form.

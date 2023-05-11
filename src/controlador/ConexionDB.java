@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 
@@ -279,6 +280,31 @@ public int Reusuario(String documento, String nombre, String contrasena, String 
         }
         return res;
     }
+    
+public List<Producto> obtenerProductos() {
+    List<Producto> productos = new ArrayList<>();
+    try {
+        PreparedStatement stmt;
+        stmt = conn.prepareStatement("SELECT idproductos, nombreproducto, descripcion, precio, cantidad FROM productos");
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            String id = rs.getString("idproductos");
+            String nombre = rs.getString("nombreproducto");
+            String descripcion = rs.getString("descripcion");
+            double precio = rs.getDouble("precio");
+            int cantidad = rs.getInt("cantidad");
+            Producto producto = new Producto(id, nombre, descripcion, precio, cantidad);
+            productos.add(producto);
+        }
+    } catch (SQLException e) {
+        System.out.println("Error al obtener productos");
+        System.out.println(e);
+    }
+    return productos;
+}
+
+    
+    
     public static void main(String[] args) {
         new ConexionDB();
   }

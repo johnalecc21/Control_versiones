@@ -15,16 +15,19 @@ public class Producto {
     private String descripcion;
     private double precio;
     private int cantidad;
+    private String estado;
 
     public Producto() {
     }
 
     
-    public Producto(String idproducto, String descripcion, double precio, int cantidad) {
+    public Producto(String idproducto,String nombreProducto, String descripcion, double precio, int cantidad) {
         this.idproducto = idproducto;
+        this.nombreProducto = nombreProducto;
         this.descripcion = descripcion;
         this.precio = precio;
         this.cantidad = cantidad;
+        actualizarEstado();
     }
     
     
@@ -72,11 +75,25 @@ public class Producto {
         public String toRegistro(){
         return "" + idproducto + "*" + nombreProducto + "*" + descripcion +  "*" + precio + "*" + cantidad;
     }
+        
+      public String getEstado() {
+        return estado;
+    }
     
     @Override
     public String toString(){
         String nombre = null;
         return nombre;
+        
+    }
+      private void actualizarEstado() {
+        if (cantidad == 0) {
+            estado = "Agotado";
+        } else if (cantidad > 0 && cantidad < 20) {
+            estado = "Pocas existencias";
+        } else {
+            estado = "En stock";
+        }
     }
 }
 
