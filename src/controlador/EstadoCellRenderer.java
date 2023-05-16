@@ -23,7 +23,7 @@ public class EstadoCellRenderer extends DefaultTableCellRenderer {
         if (estado.equals("En stock")) {
             cell.setBackground(new java.awt.Color(112, 235, 22));
         } else if (estado.equals("Pocas existencias")) {
-            cell.setBackground(new java.awt.Color(235, 216, 22));
+            cell.setBackground(new java.awt.Color(239, 249, 32));
         } else {
             cell.setBackground(new java.awt.Color(235, 96, 22));
         }
