@@ -21,7 +21,7 @@ public class Producto {
     }
 
     
-    public Producto(String idproducto,String nombreProducto, String descripcion, double precio, int cantidad) {
+    public Producto(String idproducto, String nombreProducto, double precio, int cantidad) {
         this.idproducto = idproducto;
         this.nombreProducto = nombreProducto;
         this.descripcion = descripcion;
@@ -86,11 +86,11 @@ public class Producto {
         return nombre;
         
     }
-      private void actualizarEstado() {
+      public void actualizarEstado() {
         if (cantidad == 0) {
             estado = "Agotado";
         } else if (cantidad > 0 && cantidad < 20) {
-            estado = "Pocas existencias";
+           estado = "Pocas existencias";
         } else {
             estado = "En stock";
         }

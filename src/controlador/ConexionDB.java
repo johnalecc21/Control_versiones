@@ -293,7 +293,7 @@ public List<Producto> obtenerProductos() {
             String descripcion = rs.getString("descripcion");
             double precio = rs.getDouble("precio");
             int cantidad = rs.getInt("cantidad");
-            Producto producto = new Producto(id, nombre, descripcion, precio, cantidad);
+            Producto producto = new Producto(id, nombre, precio, cantidad);
             productos.add(producto);
         }
     } catch (SQLException e) {
@@ -304,6 +304,44 @@ public List<Producto> obtenerProductos() {
 }
 
     
+public Producto buscarProducto(String idproductos) {
+    Producto producto = null;
+    try {
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM productos WHERE idproductos=?");
+        stmt.setString(1, idproductos);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            String nombre = rs.getString("nombreproducto");
+            double precio = rs.getDouble("precio");
+            int cantidad = rs.getInt("cantidad");
+            producto = new Producto(idproductos, nombre, precio, cantidad);
+        }
+    } catch (Exception e) {
+        System.out.println("Error al buscar producto");
+        System.out.println(e);
+    }
+    return producto;
+}
+
+
+
+ public int Reventa(String idproductos, int cantidad, double totalventa) {
+    try {
+
+     // Si no se encuentra ningún registro que coincida con los valores, insertar los datos en la base de datos y retornar un valor específico para indicar que se agregó correctamente
+        PreparedStatement stmt = conn.prepareStatement("INSERT INTO ventas(idproductos, cantidad, totalventa) VALUES (?, ?, ?)");
+        stmt.setString(1, idproductos);
+        stmt.setInt(2, cantidad);
+        stmt.setDouble(3, totalventa);
+        int res = stmt.executeUpdate();
+        System.out.println("Producto registrado correctamente");
+        return res;
+    } catch (Exception e) {
+        System.out.println("Error al registrar");
+        System.out.println(e);
+        return 0;
+    }
+}
     
     public static void main(String[] args) {
         new ConexionDB();
