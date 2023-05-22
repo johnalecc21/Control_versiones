@@ -8,9 +8,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import modelo.Ventas;
 
 
 
@@ -388,6 +392,38 @@ public Producto buscarProducto(String idproductos) {
     }
 }
 
+    
+   public List<Ventas> buscarVentasPorFecha(String fechaInicio, String fechaFin) {
+    List<Ventas> ventas = new ArrayList<>();
+    try {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate inicio = LocalDate.parse(fechaInicio, formatter);
+        LocalDate fin = LocalDate.parse(fechaFin, formatter);
+
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM ventas WHERE STR_TO_DATE(fecha, '%d/%m/%Y') BETWEEN ? AND ?");
+        stmt.setDate(1, java.sql.Date.valueOf(inicio));
+        stmt.setDate(2, java.sql.Date.valueOf(fin));
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            int numeroFactura = rs.getInt("numero_factura");
+            String fecha = rs.getString("fecha");
+            double totalVentas = rs.getDouble("total_ventas");
+
+            Ventas venta = new Ventas(numeroFactura, fecha, totalVentas);
+            ventas.add(venta);
+        }
+
+        rs.close();
+        stmt.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return ventas;
+}
+
+    
+  
     
     public static void main(String[] args) {
         new ConexionDB();

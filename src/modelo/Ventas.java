@@ -15,6 +15,32 @@ public class Ventas {
     private int cantidad;
     private double total;
 
+    
+    private int numeroFactura;
+    private String fecha;
+    private double totalVentas;
+
+    public Ventas(int numeroFactura, String fecha, double totalVentas) {
+        this.numeroFactura = numeroFactura;
+        this.fecha = fecha;
+        this.totalVentas = totalVentas;
+    }
+
+    public int getNumeroFactura() {
+        return numeroFactura;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public double getTotalVentas() {
+        return totalVentas;
+    }
+
+
+
+    
     public Ventas(int idproductos, String nombre,int cantidad, double precio , double total) {
         this.idproductos = idproductos;
         this.nombre = nombre;
@@ -22,6 +48,7 @@ public class Ventas {
         this.cantidad = cantidad;
         this.total = precio * cantidad;
     }
+
 
 
 
@@ -48,6 +75,8 @@ public class Ventas {
     public Ventas() {
       
     }
+
+
 
 }
 

@@ -49,6 +49,7 @@ public class Sistema extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
         jMenu7 = new javax.swing.JMenu();
+        jMenu8 = new javax.swing.JMenu();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -135,6 +136,14 @@ public class Sistema extends javax.swing.JFrame {
         });
         menubar.add(jMenu7);
 
+        jMenu8.setText("Reporte");
+        jMenu8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jMenu8MouseClicked(evt);
+            }
+        });
+        menubar.add(jMenu8);
+
         setJMenuBar(menubar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -202,6 +211,18 @@ public class Sistema extends javax.swing.JFrame {
         content.repaint(); 
     }//GEN-LAST:event_jMenu7MouseClicked
 
+    private void jMenu8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu8MouseClicked
+        // TODO add your handling code here:
+        
+        page6 pl =new page6();
+        pl.setSize(1083,557);
+      
+        content.removeAll();
+        content.add(pl);
+        content.revalidate();
+        content.repaint(); 
+    }//GEN-LAST:event_jMenu8MouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -247,6 +268,7 @@ public class Sistema extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
+    private javax.swing.JMenu jMenu8;
     private javax.swing.JMenuBar jMenuBar2;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
