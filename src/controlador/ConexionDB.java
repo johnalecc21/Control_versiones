@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -26,6 +27,10 @@ public class ConexionDB {
             System.out.println("Error al conectar");
         }
     }
+    
+    
+
+
      
       public boolean authenticate(String documento, String contrasena) {
         boolean result = false;
@@ -84,28 +89,6 @@ public int Reusuario(String documento, String nombre, String contrasena, String 
     }
     return res;
 }
-
-      
-      
-//    public int Reusuario(String documento, String nombre, String contrasena, String rol, String estado){
-//        int res=0;
-//        try {
-//            PreparedStatement stmt;
-//            stmt=conn.prepareStatement("insert into Usuarios(documento,nombre,contrasena,rol,estado)values(?,?,?,?,?)");
-//           
-//            stmt.setString(1, documento);
-//            stmt.setString(2, nombre);
-//            stmt.setString(3, contrasena);
-//            stmt.setString(4, rol); 
-//            stmt.setString(5, estado); 
-//            res=stmt.executeUpdate();
-//            System.out.println("Usuario registrado correctamente");
-//        } catch (Exception e) {
-//            System.out.println("Error al registrar");
-//            System.out.println(e);
-//        }      
-//        return res;
-//    }
     
         public ArrayList<Usuario> ListarUsuario(){
         PreparedStatement ps;
@@ -342,6 +325,69 @@ public Producto buscarProducto(String idproductos) {
         return 0;
     }
 }
+ 
+ 
+ 
+ // Método para insertar los datos de la venta en la tabla 'ventas'
+    public void insertarVenta(int numero_factura, String fecha, double totalVentas) {
+        try {
+
+            // Preparar la consulta SQL para insertar la venta
+            String consulta = "INSERT INTO ventas (numero_factura, fecha, total_ventas) VALUES (?, ?, ?)";
+            PreparedStatement statement = conn.prepareStatement(consulta);
+
+            // Establecer los valores de los parámetros de la consulta
+            statement.setInt(1, numero_factura);
+            statement.setString(2, fecha.toString());
+            statement.setDouble(3, totalVentas);
+
+            // Ejecutar la consulta
+            statement.executeUpdate();
+
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al insertar la venta en la base de datos: " + e.getMessage());
+        }
+    }
+    
+    // Método para insertar los detalles de la venta en la tabla 'detalle_venta'
+    public void insertarDetalleVenta(int numero_factura, int productosid, String nombreProducto, int cantidadprod, double precio, double total) {
+        try {
+
+            // Preparar la consulta SQL para insertar el detalle de la venta
+            String consulta = "INSERT INTO detalle_venta (numero_factura, productosid, cantidadprod, precio, total) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement statement = conn.prepareStatement(consulta);
+
+            // Establecer los valores de los parámetros de la consulta
+            statement.setInt(1, numero_factura);
+            statement.setInt(2, productosid);
+            statement.setInt(3, cantidadprod);
+            statement.setDouble(4, precio);
+            statement.setDouble(5, total);
+
+            // Ejecutar la consulta
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al insertar el detalle de la venta en la base de datos: " + e.getMessage());
+        }
+    }
+    
+    public void actualizarCantidadProducto(int idproductos, int cantidad) {
+    try {
+       
+        String query = "UPDATE productos SET cantidad = cantidad - ? WHERE idproductos = ?";
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setInt(1, cantidad);
+        statement.setInt(2, idproductos);
+        statement.executeUpdate();
+        statement.close();
+        conn.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
     
     public static void main(String[] args) {
         new ConexionDB();

@@ -91,7 +91,6 @@ public class page5 extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         Listaventa = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
         TxtTotal = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
 
@@ -227,20 +226,16 @@ public class page5 extends javax.swing.JPanel {
                 jButton4ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 450, 130, 50));
-
-        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton5.setText("Cancelar");
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 450, 120, 50));
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 440, 270, 50));
 
         TxtTotal.setEnabled(false);
-        jPanel1.add(TxtTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 430, 140, 40));
+        jPanel1.add(TxtTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 430, 150, 40));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Total a pagar");
-        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 440, 90, 20));
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(800, 440, 90, 20));
 
-        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1080, 560));
+        add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 1080, 560));
     }// </editor-fold>//GEN-END:initComponents
 
     private void TxtCodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TxtCodActionPerformed
@@ -254,6 +249,52 @@ public class page5 extends javax.swing.JPanel {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
         generarNumeroFactura();
+        
+        
+        
+        try {
+            
+        // Obtener la fecha actual
+        LocalDate fechaActual = LocalDate.now();
+        String fechaActualTexto = fechaActual.format(formatoFecha);
+        
+        // Obtener el total a pagar
+        double totalPagar = Double.parseDouble(TxtTotal.getText());
+        
+        // Guardar la venta en la base de datos
+        ConexionDB conexionDB = new ConexionDB();
+        conexionDB.insertarVenta(numeroFactura, fechaActualTexto, totalPagar);
+        
+        // Guardar los detalles de la venta en la base de datos
+        DefaultTableModel modelo = (DefaultTableModel) Listaventa.getModel();
+        int filas = modelo.getRowCount();
+        
+        for (int i = 0; i < filas; i++) {
+            int idProducto = (int) modelo.getValueAt(i, 0);
+            String nombreProducto = (String) modelo.getValueAt(i, 1);
+            int cantidad = (int) modelo.getValueAt(i, 2);
+            double precio = (double) modelo.getValueAt(i, 3);
+            double total = (double) modelo.getValueAt(i, 4);
+            
+            conexionDB.insertarDetalleVenta(numeroFactura, idProducto, nombreProducto, cantidad, precio, total);
+        }
+        
+        JOptionPane.showMessageDialog(null, "Venta generada correctamente");
+        
+        // Limpiar la tabla y reiniciar los campos
+        modelo.setRowCount(0);
+        TxtCod.setText("");
+        TxtPrecio.setText("");
+        TxtCant.setText("");
+        TxtProd.setText("");
+        TxtStock.setText("");
+        TxtTotal.setText("");
+        
+        // Generar un nuevo número de factura
+        generarNumeroFactura();
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error al generar la venta: " + e.getMessage());
+    }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void BtnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnBuscarActionPerformed
@@ -291,7 +332,8 @@ try {
         String nombreproducto = TxtProd.getText();
         double precio = Double.parseDouble(TxtPrecio.getText());
         int cantidad = Integer.parseInt(TxtCant.getText());
-
+        ConexionDB conexionDB = new ConexionDB();
+        conexionDB.actualizarCantidadProducto(idproducto, cantidad);
         double total = precio * cantidad;
 
         Object[] ventaData = {idproducto, nombreproducto, cantidad, precio, total};
@@ -354,7 +396,6 @@ try {
     private javax.swing.JTextField TxtStock;
     private javax.swing.JTextField TxtTotal;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
