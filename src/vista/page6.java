@@ -24,20 +24,53 @@ import modelo.Ventas;
 import javax.swing.JFormattedTextField;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
+import modelo.DetalleVenta;
 /**
  *
  * @author johna
  */
 public class page6 extends javax.swing.JPanel {
 
-
+  private ConexionDB conexionDB;
     /**
      * Creates new form page6
      */
     public page6() {
         initComponents();
 
+
+        conexionDB = new ConexionDB();
+        agregarMouseListenerTabla();
     }
+
+  private void agregarMouseListenerTabla() {
+    // Agregar un MouseListener a la JTable
+    jreporte.addMouseListener(new MouseAdapter() {
+        public void mouseClicked(MouseEvent e) {
+            if (e.getClickCount() == 1) { // Verificar si es un solo clic
+                int filaSeleccionada = jreporte.getSelectedRow();
+                if (filaSeleccionada != -1) { // Verificar si se ha seleccionado una fila
+                    String numeroFactura = jreporte.getValueAt(filaSeleccionada, 0).toString();
+
+                    // Consultar la base de datos para obtener los detalles del producto basados en el número de factura
+                    DetalleVenta detalle = conexionDB.buscarDetalleVenta(numeroFactura);
+                    if (detalle != null) {
+                        // Mostrar los detalles del producto en un JOptionPane
+                     String mensaje = "<html><div style='font-size: 14pt;'><b>Detalles de la venta seleccionada:</b></div><br><br>" +
+                    "<b>Nombre del producto: </b> " + detalle.getProducto().getNombreProducto() + "<br>" +
+                    "<b>Descripción del producto: </b> " + detalle.getProducto().getDescripcion() + "<br>" +
+                    "<b>Cantidad: </b> " + detalle.getCantidadProducto() + "<br>" +
+                    "<b>Precio del producto: </b> $" + detalle.getPrecio() + "</html>";
+                     
+                        JOptionPane.showMessageDialog(null, mensaje);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No se encontraron detalles de venta para la factura seleccionada.");
+                    }
+                }
+            }
+        }
+    });
+}
 
     
 
@@ -141,7 +174,9 @@ public void mostrarVentasEnJTable(List<Ventas> ventas, JTable jreporte) {
         jLabel3.setText("Fecha Fin:");
         jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 20, 97, -1));
 
+        BtnReporte.setBackground(new java.awt.Color(51, 153, 255));
         BtnReporte.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnReporte.setForeground(new java.awt.Color(255, 255, 255));
         BtnReporte.setText("Generar reporte");
         BtnReporte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -134,6 +134,8 @@ public class page5 extends javax.swing.JPanel {
         });
         jPanel2.add(TxtCod, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 160, 140, 35));
 
+        BtnBuscar.setBackground(new java.awt.Color(229, 190, 1));
+        BtnBuscar.setForeground(new java.awt.Color(255, 255, 255));
         BtnBuscar.setText("Buscar");
         BtnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -165,6 +167,7 @@ public class page5 extends javax.swing.JPanel {
         jLabel7.setText("Cantidad");
         jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(19, 326, -1, -1));
 
+        TxtCant.setEnabled(false);
         TxtCant.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 TxtCantKeyTyped(evt);
@@ -179,7 +182,9 @@ public class page5 extends javax.swing.JPanel {
         TxtPrecio.setEnabled(false);
         jPanel2.add(TxtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(105, 373, 312, 34));
 
+        BtnAgregar.setBackground(new java.awt.Color(51, 153, 255));
         BtnAgregar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnAgregar.setForeground(new java.awt.Color(255, 255, 255));
         BtnAgregar.setText("Agregar");
         BtnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -219,7 +224,9 @@ public class page5 extends javax.swing.JPanel {
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 30, 570, 390));
 
+        jButton4.setBackground(new java.awt.Color(49, 211, 49));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("generar venta");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -293,7 +300,7 @@ public class page5 extends javax.swing.JPanel {
         // Generar un nuevo número de factura
         generarNumeroFactura();
     } catch (Exception e) {
-        JOptionPane.showMessageDialog(null, "Error al generar la venta: " + e.getMessage());
+        JOptionPane.showMessageDialog(null, "Error al generar la venta verifique los campos " );
     }
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -310,6 +317,7 @@ try {
         TxtProd.setText(producto.getNombreProducto());
         TxtPrecio.setText(String.valueOf(producto.getPrecio()));
         TxtStock.setText(producto.getEstado());
+        TxtCant.setEnabled(true);
     } else {
         JOptionPane.showMessageDialog(null, "El producto con el código especificado no se encuentra");
         TxtCod.setText("");
@@ -350,11 +358,12 @@ try {
         TxtCant.setText("");
         TxtProd.setText("");
         TxtStock.setText("");
+        TxtCant.setEnabled(false);
     } else {
         JOptionPane.showMessageDialog(null, "No hay suficiente stock de este producto");
     }
 } catch (Exception e) {
-    JOptionPane.showMessageDialog(null, "Error al agregar la venta: " + e.getMessage());
+    JOptionPane.showMessageDialog(null, "Error al agregar la venta verifique los campos " );
 }
 
         

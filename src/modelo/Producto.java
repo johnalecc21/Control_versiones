@@ -29,7 +29,7 @@ public class Producto {
         this.cantidad = cantidad;
         actualizarEstado();
     }
-    
+
     
     public String getIdproducto() {
         return idproducto;

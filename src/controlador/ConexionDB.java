@@ -1,6 +1,7 @@
 
 package controlador;
 
+import java.math.BigDecimal;
 import modelo.Usuario;
 import modelo.Producto;
 import java.sql.Connection;
@@ -14,6 +15,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import modelo.DetalleVenta;
 import modelo.Ventas;
 
 
@@ -187,26 +189,6 @@ public int Reusuario(String documento, String nombre, String contrasena, String 
     }
 }
 
-    /*public int Reproducto(String nombreproducto, String descripcion, String precio, String cantidad){
-        int res=0;
-        try {
-  
-            PreparedStatement stmt;
-            stmt=conn.prepareStatement("insert into productos(nombreproducto,descripcion,precio,cantidad)values(?,?,?,?)");
-           
-            stmt.setString(1, nombreproducto);
-            stmt.setString(2, descripcion);
-            stmt.setString(3, precio);
-            stmt.setString(4, cantidad); 
-            res=stmt.executeUpdate();
-            System.out.println("Producto registrado correctamente");
-        } catch (Exception e) {
-            System.out.println("Error al registrar");
-            System.out.println(e);
-        }
-        
-        return res;
-    }*/
     
     public ArrayList<Producto> ListarProducto(){
         PreparedStatement ps;
@@ -299,7 +281,7 @@ public Producto buscarProducto(String idproductos) {
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
             String nombre = rs.getString("nombreproducto");
-            String descripcion = rs.getString("escripcion");
+            String descripcion = rs.getString("descripcion");
             double precio = rs.getDouble("precio");
             int cantidad = rs.getInt("cantidad");
             producto = new Producto(idproductos, nombre,descripcion, precio, cantidad);
@@ -423,8 +405,50 @@ public Producto buscarProducto(String idproductos) {
     return ventas;
 }
 
-    
-  
+   
+   public DetalleVenta buscarDetalleVenta(String numeroFactura) {
+    DetalleVenta detalleVenta = null;
+    try {
+        // Realizar la consulta en la base de datos para obtener los datos del detalle de venta
+        String query = "SELECT dv.id_detalle, dv.numero_factura, dv.productosid, dv.cantidadprod, dv.precio, dv.total, p.idproductos, p.nombreproducto,p.descripcion, p.precio "
+                + "FROM detalle_venta dv "
+                + "JOIN productos p ON dv.productosid = p.idproductos "
+                + "WHERE dv.numero_factura = ?";
+
+        PreparedStatement statement = conn.prepareStatement(query);
+        statement.setString(1, numeroFactura);
+        ResultSet rs = statement.executeQuery();
+
+        if (rs.next()) {
+            int idDetalle = rs.getInt("id_detalle");
+            int numFactura = rs.getInt("numero_factura");
+            int productoId = rs.getInt("productosid");
+            int cantidadProducto = rs.getInt("cantidadprod");
+            double precio = rs.getDouble("precio");
+
+
+            String idProducto = rs.getString("idproductos");
+            String nombreProducto = rs.getString("nombreproducto");
+            String descripcion = rs.getString("descripcion");
+            double precioProducto = rs.getDouble("precio");
+            
+
+            // Crear el objeto Producto con los datos obtenidos
+            Producto producto = new Producto(idProducto, nombreProducto,descripcion, precioProducto,cantidadProducto);
+
+            // Construir el objeto DetalleVenta con los datos del detalle y el producto
+            detalleVenta = new DetalleVenta(idDetalle, numFactura, productoId, cantidadProducto, precio, producto);
+        }
+
+        rs.close();
+        statement.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return detalleVenta;
+}
+   
     
     public static void main(String[] args) {
         new ConexionDB();
