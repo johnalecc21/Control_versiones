@@ -64,9 +64,10 @@ private void actualizarTabla() {
     modelo.addColumn("estado");
     
 
-    for (Producto producto : productos) {
-        modelo.addRow(new Object[]{producto.getIdproducto(), producto.getNombreProducto(), producto.getDescripcion(), producto.getPrecio(), producto.getCantidad(), producto.getEstado()});
-    }
+ for (Producto producto : productos) {
+    modelo.addRow(new Object[]{producto.getIdproducto(), producto.getNombreProducto(), producto.getDescripcion(), producto.getPrecio(), producto.getCantidad(), producto.getEstado()});
+}
+
 
     listaKardex.setModel(modelo);
     

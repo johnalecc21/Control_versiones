@@ -280,7 +280,7 @@ public List<Producto> obtenerProductos() {
             String descripcion = rs.getString("descripcion");
             double precio = rs.getDouble("precio");
             int cantidad = rs.getInt("cantidad");
-            Producto producto = new Producto(id, nombre, precio, cantidad);
+            Producto producto = new Producto(id, nombre,descripcion, precio, cantidad);
             productos.add(producto);
         }
     } catch (SQLException e) {
@@ -299,9 +299,10 @@ public Producto buscarProducto(String idproductos) {
         ResultSet rs = stmt.executeQuery();
         if (rs.next()) {
             String nombre = rs.getString("nombreproducto");
+            String descripcion = rs.getString("escripcion");
             double precio = rs.getDouble("precio");
             int cantidad = rs.getInt("cantidad");
-            producto = new Producto(idproductos, nombre, precio, cantidad);
+            producto = new Producto(idproductos, nombre,descripcion, precio, cantidad);
         }
     } catch (Exception e) {
         System.out.println("Error al buscar producto");

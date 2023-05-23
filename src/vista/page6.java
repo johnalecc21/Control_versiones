@@ -5,16 +5,31 @@
 package vista;
 
 import controlador.ConexionDB;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.MaskFormatter;
+import modelo.Producto;
 import modelo.Ventas;
-
+import javax.swing.JFormattedTextField;
+import javax.swing.JTextField;
+import javax.swing.text.MaskFormatter;
 /**
  *
  * @author johna
  */
 public class page6 extends javax.swing.JPanel {
+
 
     /**
      * Creates new form page6
@@ -22,13 +37,14 @@ public class page6 extends javax.swing.JPanel {
     public page6() {
         initComponents();
 
-
     }
 
-      
-        public void mostrarVentasEnJTable(List<Ventas> ventas, JTable jreporte) {
-   DefaultTableModel model = (DefaultTableModel) jreporte.getModel();
-    model.setRowCount(0);
+    
+
+public void mostrarVentasEnJTable(List<Ventas> ventas, JTable jreporte) {
+    DefaultTableModel model = new DefaultTableModel();
+    model.setColumnIdentifiers(new Object[]{"Número de Factura", "Fecha", "Total de Ventas"});
+    jreporte.setModel(model);
 
     for (Ventas venta : ventas) {
         Object[] row = new Object[3];
@@ -37,7 +53,12 @@ public class page6 extends javax.swing.JPanel {
         row[2] = venta.getTotalVentas();
         model.addRow(row);
     }
-    }
+
+
+}
+
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -93,24 +114,35 @@ public class page6 extends javax.swing.JPanel {
                 textFieldFechaInicioActionPerformed(evt);
             }
         });
-        jPanel3.add(textFieldFechaInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(146, 8, 194, 47));
+        textFieldFechaInicio.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                textFieldFechaInicioKeyTyped(evt);
+            }
+        });
+        jPanel3.add(textFieldFechaInicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 10, 194, 47));
 
         textFieldFechaFin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textFieldFechaFinActionPerformed(evt);
             }
         });
-        jPanel3.add(textFieldFechaFin, new org.netbeans.lib.awtextra.AbsoluteConstraints(521, 20, 193, 40));
+        textFieldFechaFin.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                textFieldFechaFinKeyTyped(evt);
+            }
+        });
+        jPanel3.add(textFieldFechaFin, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 10, 193, 50));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setText("Fecha Inicio:");
-        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(21, 8, 97, -1));
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 97, -1));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("Fecha Fin:");
-        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(387, 20, 97, -1));
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 20, 97, -1));
 
-        BtnReporte.setText("jButton1");
+        BtnReporte.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BtnReporte.setText("Generar reporte");
         BtnReporte.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BtnReporteActionPerformed(evt);
@@ -140,6 +172,7 @@ public class page6 extends javax.swing.JPanel {
 
     private void textFieldFechaInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldFechaInicioActionPerformed
         // TODO add your handling code here:
+     
     }//GEN-LAST:event_textFieldFechaInicioActionPerformed
 
     private void textFieldFechaFinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textFieldFechaFinActionPerformed
@@ -158,7 +191,7 @@ try {
         List<Ventas> ventas = db.buscarVentasPorFecha(fechaInicio, fechaFin);
         mostrarVentasEnJTable(ventas, jreporte);
     } else {
-        // Mostrar mensaje de error o realizar alguna acción adicional
+       JOptionPane.showMessageDialog(null, "Campos vacios");
     }
 } catch (Exception e) {
     e.printStackTrace();
@@ -166,6 +199,128 @@ try {
 }
 
     }//GEN-LAST:event_BtnReporteActionPerformed
+
+    private void textFieldFechaInicioKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textFieldFechaInicioKeyTyped
+        // TODO add your handling code here:
+textFieldFechaInicio.addKeyListener(new KeyAdapter() {
+    public void keyTyped(KeyEvent e) {
+        char c = e.getKeyChar();
+        String text = textFieldFechaInicio.getText();
+
+        // Verifica si el carácter es un número o el símbolo "/"
+        if (Character.isDigit(c) || c == '/') {
+            // Verifica el formato del texto ingresado
+            if (text.length() == 2 || text.length() == 5) {
+                textFieldFechaInicio.setText(text + "/");
+            }
+            
+            // Obtiene los componentes de la fecha ingresada
+            String[] dateComponents = (text + c).split("/");
+            if (dateComponents.length == 3) {
+                try {
+                    int day = Integer.parseInt(dateComponents[0]);
+                    int month = Integer.parseInt(dateComponents[1]);
+                    int year = Integer.parseInt(dateComponents[2]);
+                    
+                    // Verifica la validez del mes
+                    if (month < 1 || month > 12) {
+                        e.consume(); // Descarta el carácter ingresado
+                    }
+                    
+                    // Verifica la validez del día según el mes
+                    boolean isValidDay = false;
+                    if (month == 2) {
+                        // Febrero (considera si el año es bisiesto o no)
+                        boolean isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+                        isValidDay = day >= 1 && day <= (isLeapYear ? 29 : 28);
+                    } else if (month == 4 || month == 6 || month == 9 || month == 11) {
+                        // Meses con 30 días
+                        isValidDay = day >= 1 && day <= 30;
+                    } else {
+                        // Meses con 31 días
+                        isValidDay = day >= 1 && day <= 31;
+                    }
+                    
+                    if (!isValidDay) {
+                        e.consume(); // Descarta el carácter ingresado
+                    }
+                } catch (NumberFormatException ex) {
+                    // Ignora la excepción si no se pueden parsear los componentes de la fecha
+                }
+            }
+        } else {
+            e.consume(); // Descarta el carácter ingresado
+        }
+
+        // Verifica la longitud del texto
+        if (text.length() >= 10) {
+            e.consume(); // Descarta el carácter ingresado
+        }
+    }
+});
+
+    }//GEN-LAST:event_textFieldFechaInicioKeyTyped
+
+    private void textFieldFechaFinKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textFieldFechaFinKeyTyped
+        // TODO add your handling code here:
+  textFieldFechaFin.addKeyListener(new KeyAdapter() {
+    public void keyTyped(KeyEvent e) {
+        char c = e.getKeyChar();
+        String text = textFieldFechaFin.getText();
+
+        // Verifica si el carácter es un número o el símbolo "/"
+        if (Character.isDigit(c) || c == '/') {
+            // Verifica el formato del texto ingresado
+            if (text.length() == 2 || text.length() == 5) {
+                textFieldFechaFin.setText(text + "/");
+            }
+            
+            // Obtiene los componentes de la fecha ingresada
+            String[] dateComponents = (text + c).split("/");
+            if (dateComponents.length == 3) {
+                try {
+                    int day = Integer.parseInt(dateComponents[0]);
+                    int month = Integer.parseInt(dateComponents[1]);
+                    int year = Integer.parseInt(dateComponents[2]);
+                    
+                    // Verifica la validez del mes
+                    if (month < 1 || month > 12) {
+                        e.consume(); // Descarta el carácter ingresado
+                    }
+                    
+                    // Verifica la validez del día según el mes
+                    boolean isValidDay = false;
+                    if (month == 2) {
+                        // Febrero (considera si el año es bisiesto o no)
+                        boolean isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+                        isValidDay = day >= 1 && day <= (isLeapYear ? 29 : 28);
+                    } else if (month == 4 || month == 6 || month == 9 || month == 11) {
+                        // Meses con 30 días
+                        isValidDay = day >= 1 && day <= 30;
+                    } else {
+                        // Meses con 31 días
+                        isValidDay = day >= 1 && day <= 31;
+                    }
+                    
+                    if (!isValidDay) {
+                        e.consume(); // Descarta el carácter ingresado
+                    }
+                } catch (NumberFormatException ex) {
+                    // Ignora la excepción si no se pueden parsear los componentes de la fecha
+                }
+            }
+        } else {
+            e.consume(); // Descarta el carácter ingresado
+        }
+
+        // Verifica la longitud del texto
+        if (text.length() >= 10) {
+            e.consume(); // Descarta el carácter ingresado
+        }
+    }
+});
+
+    }//GEN-LAST:event_textFieldFechaFinKeyTyped
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

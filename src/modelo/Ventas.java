@@ -4,6 +4,9 @@
  */
 package modelo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author johna
@@ -14,17 +17,20 @@ public class Ventas {
     private double precio;
     private int cantidad;
     private double total;
-
-    
+    private List<Producto> productos;  
     private int numeroFactura;
     private String fecha;
     private double totalVentas;
-
+    
+    
     public Ventas(int numeroFactura, String fecha, double totalVentas) {
-        this.numeroFactura = numeroFactura;
-        this.fecha = fecha;
-        this.totalVentas = totalVentas;
-    }
+    this.numeroFactura = numeroFactura;
+    this.fecha = fecha;
+    this.totalVentas = totalVentas;
+    this.productos = new ArrayList<>(); // Inicializar la lista de productos
+}
+
+
 
     public int getNumeroFactura() {
         return numeroFactura;
@@ -50,6 +56,9 @@ public class Ventas {
     }
 
 
+public List<Producto> getProductos() {
+    return productos;
+}
 
 
     public int getIdProductos() {
